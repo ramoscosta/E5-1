@@ -1,0 +1,91 @@
+Current configuration : 1306 bytes
+!
+version 12.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname Routeur-2
+!
+boot-start-marker
+boot-end-marker
+!
+!
+no aaa new-model
+!
+resource policy
+!
+ip cef
+!
+!
+no ip dhcp use vrf connected
+!
+ip dhcp pool Technique
+   network 192.168.1.0 255.255.255.0
+   default-router 192.168.1.1
+   dns-server 192.168.1.1
+!
+ip dhcp pool Administration
+   network 192.168.2.0 255.255.255.0
+   default-router 192.168.2.1
+   dns-server 192.168.2.1
+!
+!
+ip domain name btssio
+!
+!
+!
+username btssio password 0 btssio
+!
+!
+!
+!
+!
+!
+interface FastEthernet0/0
+ ip address 10.10.10.2 255.255.255.252
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/1
+ no ip address
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/1.10
+ encapsulation dot1Q 10
+ ip address 192.168.1.1 255.255.255.0
+!
+interface FastEthernet0/1.20
+ encapsulation dot1Q 20
+ ip address 192.168.2.1 255.255.255.0
+!
+router ospf 1
+ log-adjacency-changes
+ network 10.10.10.0 0.0.0.3 area 0
+ network 192.168.1.0 0.0.0.255 area 0
+ network 192.168.2.0 0.0.0.255 area 0
+!
+!
+!
+ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+control-plane
+!
+!
+line con 0
+line aux 0
+line vty 0 4
+ login local
+ transport input ssh
+line vty 5 15
+ login local
+ transport input ssh
+!
+scheduler allocate 20000 1000
+end

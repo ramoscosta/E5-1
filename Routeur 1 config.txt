@@ -1,0 +1,99 @@
+Current configuration : 1496 bytes
+!
+version 12.4
+service timestamps debug datetime msec
+service timestamps log datetime msec
+no service password-encryption
+!
+hostname Routeur-1
+!
+boot-start-marker
+boot-end-marker
+!
+!
+no aaa new-model
+ip cef
+!
+!
+no ip dhcp use vrf connected
+!
+ip dhcp pool Marketing
+   network 192.168.3.0 255.255.255.0
+   default-router 192.168.3.1
+   dns-server 192.168.3.1
+!
+ip dhcp pool RH
+   network 192.168.4.0 255.255.255.0
+   default-router 192.168.4.1
+   dns-server 192.168.4.1
+!
+!
+ip domain name btssio
+ip auth-proxy max-nodata-conns 3
+ip admission max-nodata-conns 3
+!
+!
+!
+username btssio password 0 btssio
+!
+!
+!
+!
+!
+!
+interface FastEthernet0/0
+ ip address 10.10.10.1 255.255.255.252
+ ip helper-address 10.10.10.1
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/0.30
+ shutdown
+!
+interface FastEthernet0/0.40
+!
+interface FastEthernet0/1
+ no ip address
+ ip helper-address 10.10.10.1
+ duplex auto
+ speed auto
+!
+interface FastEthernet0/1.30
+ encapsulation dot1Q 30
+ ip address 192.168.3.1 255.255.255.0
+!
+interface FastEthernet0/1.40
+ encapsulation dot1Q 40
+ ip address 192.168.4.1 255.255.255.0
+!
+router ospf 1
+ log-adjacency-changes
+ network 10.10.10.0 0.0.0.3 area 0
+ network 192.168.3.0 0.0.0.255 area 0
+ network 192.168.4.0 0.0.0.255 area 0
+!
+ip forward-protocol nd
+!
+!
+ip http server
+no ip http secure-server
+!
+!
+!
+!
+!
+control-plane
+!
+!
+!
+line con 0
+line aux 0
+line vty 0 4
+ login local
+ transport input ssh
+line vty 5 15
+ login local
+ transport input ssh
+!
+scheduler allocate 20000 1000
+end
